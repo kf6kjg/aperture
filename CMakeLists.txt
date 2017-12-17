@@ -61,6 +61,7 @@ set(Aperture_SRCS
     aperture/Validator.cpp
     aperture/WhipURI.cpp
     aperture/win_main.cpp
+    aperture/nix_main.cpp
     ${PROTO_SRCS}
     )
 
@@ -123,6 +124,9 @@ target_link_libraries(aperture
     ${CMAKE_THREAD_LIBS_INIT}
     ${CONAN_LIBS}
     )
+target_compile_features(aperture
+    PRIVATE cxx_range_for
+    ) 
 
 IF (WIN32)
   SET_PROPERTY(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT aperture)
