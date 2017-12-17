@@ -21,7 +21,7 @@ AuthResponseMsg::AuthResponseMsg()
 
 AuthResponseMsg::AuthResponseMsg(const std::string& challenge, const std::string& password)
 {
-	_data.push_back(PACKET_IDENTIFIER);
+	_data.push_back(AuthResponseMsg::PACKET_IDENTIFIER);
 
 	//calculate our response
 	string correctHash = this->calculateChallengeResponse(challenge, password);
@@ -44,14 +44,14 @@ std::string AuthResponseMsg::getChallengeResponse() const
 
 bool AuthResponseMsg::isServerResponse() const
 {
-	return _data[0] == SERVER_IDENTIFIER;
+	return _data[0] == AuthResponseMsg::SERVER_IDENTIFIER;
 }
 
 bool AuthResponseMsg::isValid(AuthChallengeMsg::ptr authChallenge)
 {
 	//check the header
-	if (_data[0] != PACKET_IDENTIFIER &&
-		_data[0] != SERVER_IDENTIFIER)
+	if (_data[0] != AuthResponseMsg::PACKET_IDENTIFIER &&
+		_data[0] != AuthResponseMsg::SERVER_IDENTIFIER)
 	{
 		return false;
 	}
