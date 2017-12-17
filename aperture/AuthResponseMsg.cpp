@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include <string>
 #include <boost/numeric/conversion/cast.hpp>
@@ -58,7 +58,7 @@ bool AuthResponseMsg::isValid(AuthChallengeMsg::ptr authChallenge)
 
 	string correctHash = this->calculateChallengeResponse(authChallenge->getPhrase(),
 		Settings::instance().config()["password"].as<string>());
-		
+
 	if (correctHash == this->getChallengeResponse()) {
 		return true;
 	}
@@ -69,7 +69,7 @@ bool AuthResponseMsg::isValid(AuthChallengeMsg::ptr authChallenge)
 std::string AuthResponseMsg::calculateChallengeResponse(const std::string& phrase, const std::string& password)
 {
 	CSHA1 sha;
-	
+
 	//calculate the correct hash based on password and the challenge that was sent
 	string correctHash(password + phrase);
 	sha.Update((unsigned char*) correctHash.data(), boost::numeric_cast<unsigned int>(correctHash.size()));

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ClientRequestMsg.h"
 #include "Winsock2.h"
@@ -6,7 +6,7 @@
 ClientRequestMsg::ClientRequestMsg()
 : _header(HEADER_SIZE)
 {
-	
+
 }
 ClientRequestMsg::ClientRequestMsg(RequestType type, const std::string& uuid)
 {

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Settings.h"
 
@@ -46,7 +46,7 @@ namespace aperture
 			("cf_worker_threads", po::value<unsigned int>()->default_value(16), "Default number of worker threads to make requests on CF")
 		;
 
-		
+
 
 		//try to load the config file
 		std::ifstream configFile(_configFileName.c_str());

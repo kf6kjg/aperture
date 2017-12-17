@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "AssetServer.h"
 #include "AppLog.h"
 #include "ClientRequestMsg.h"
@@ -51,8 +51,8 @@ namespace whip
 			}
 
 			//kill all transfer requests
-			
-			for (PendingTransferMap::iterator i = _pendingTransfers.begin(); 
+
+			for (PendingTransferMap::iterator i = _pendingTransfers.begin();
 				i != _pendingTransfers.end(); ++i)
 			{
 				AssetCallbackList& callbacks = i->second;
@@ -64,7 +64,7 @@ namespace whip
 			}
 
 			_pendingTransfers.clear();
-			
+
 			PendingSendQueue empty;
 			std::swap(_pendingSends, empty);
 
@@ -126,11 +126,11 @@ namespace whip
 					authChallenge));
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Unable to make connection to asset service on intramesh server: "
 				<< _assetServiceEndpoint
 				<< std::endl;
-			
+
 			this->close();
 		}
 	}
@@ -143,18 +143,18 @@ namespace whip
 			this->sendChallengeResponse(challenge);
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Unable to authenticate with asset service on intramesh server: "
 				<< _assetServiceEndpoint
 				<< std::endl;
-			
+
 			this->close();
 		}
 	}
 
 	void AssetServer::sendChallengeResponse(AuthChallengeMsg::ptr challenge)
 	{
-		AuthResponseMsg::ptr respMessage(new AuthResponseMsg(challenge->getPhrase(), 
+		AuthResponseMsg::ptr respMessage(new AuthResponseMsg(challenge->getPhrase(),
 			_serverURI.getPassword()));
 
 		boost::asio::async_write(_serviceSocket,
@@ -169,28 +169,28 @@ namespace whip
 	{
 		if (!error && bytesRcvd > 0) {
 			if (! authStatus->validate()) {
-				AppLog::instance().out() 
+				AppLog::instance().out()
 				<< "[WHIP] Unable to authenticate with asset service on intramesh server: "
 				<< _assetServiceEndpoint
 				<< ": The server's authentication response was invalid"
 				<< std::endl;
-			
+
 				this->close();
 				return;
 			}
 
 			if (authStatus->getAuthStatus() != AS_AUTH_SUCCESS) {
-				AppLog::instance().out() 
+				AppLog::instance().out()
 				<< "[WHIP] Unable to authenticate with asset service on intramesh server: "
 				<< _assetServiceEndpoint
 				<< ": Invalid credentials"
 				<< std::endl;
-			
+
 				this->close();
 				return;
 			}
 
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Connection established to asset service on server: "
 				<< _assetServiceEndpoint
 				<< std::endl;
@@ -198,13 +198,13 @@ namespace whip
 			_connectionState = CSTATE_CONNECTED;
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Unable to authenticate with asset service on intramesh server: "
 				<< _assetServiceEndpoint
 				<< ": "
 				<< error.message()
 				<< std::endl;
-			
+
 			this->close();
 		}
 	}
@@ -223,13 +223,13 @@ namespace whip
 					authStatus));
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Unable to authenticate with asset service on intramesh server: "
 				<< _assetServiceEndpoint
 				<< ": "
 				<< error.message()
 				<< std::endl;
-			
+
 			this->close();
 		}
 	}
@@ -283,7 +283,7 @@ namespace whip
 			}
 
 		}
-	
+
 	}
 
 	void AssetServer::processNextSendItem()
@@ -312,7 +312,7 @@ namespace whip
 			this->tryProcessNextSendItem();
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Error while reading asset header from mesh server "
 				<< _assetServiceEndpoint
 				<< ": "
@@ -328,7 +328,7 @@ namespace whip
 	{
 		//read the response header
 		ServerResponseMsg::ptr response(new ServerResponseMsg());
-		boost::asio::async_read(_serviceSocket, 
+		boost::asio::async_read(_serviceSocket,
 			boost::asio::buffer(response->getHeader(), response->getHeader().size()),
 			boost::bind(&AssetServer::onReadResponseHeader, this,
 			  boost::asio::placeholders::error,
@@ -341,15 +341,15 @@ namespace whip
 	{
 		if (!error && bytesSent > 0) {
 			//is the response valid and positive?
-			if (response->validateHeader() && 
+			if (response->validateHeader() &&
 				response->getResponseCode() == ServerResponseMsg::RC_FOUND) {
-				
+
 				//adjust data size
 				response->initializeDataStorage();
 
 				//read the data
 #pragma warning (disable: 4503) //decorated name length exceeded
-				boost::asio::async_read(_serviceSocket, 
+				boost::asio::async_read(_serviceSocket,
 					boost::asio::buffer(*(response->getData()), response->getData()->size()),
 					boost::bind(&AssetServer::onReadResponseData, this,
 					  boost::asio::placeholders::error,
@@ -358,10 +358,10 @@ namespace whip
 
 			} else {
 				//error, not found, or other condition
-				
+
 				//invalid header disconnect this server
 				if (! response->validateHeader()) {
-					AppLog::instance().out() 
+					AppLog::instance().out()
 					<< "[WHIP] Invalid request header sent from server. Terminating connection "
 					<< "asset svc ep: " << _assetServiceEndpoint
 					<< std::endl;
@@ -376,7 +376,7 @@ namespace whip
 						response->initializeDataStorage();
 
 						//read the data and discard
-						boost::asio::async_read(_serviceSocket, 
+						boost::asio::async_read(_serviceSocket,
 							boost::asio::buffer(*(response->getData()), response->getData()->size()),
 							boost::bind(&AssetServer::onHandleRequestErrorData, this,
 							  boost::asio::placeholders::error,
@@ -389,11 +389,11 @@ namespace whip
 					}
 				}
 
-				
+
 			}
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Error while reading asset header from mesh server "
 				<< _assetServiceEndpoint
 				<< ": "
@@ -414,12 +414,12 @@ namespace whip
 			{
 				callback(asset);
 			}
-			
+
 			_pendingTransfers.erase(i);
 		}
-		
+
 	}
-	
+
 	void AssetServer::testContinueRecv()
 	{
 		if (_pendingTransfers.size() > 0) {
@@ -434,7 +434,7 @@ namespace whip
 			string error;
 			error.insert(error.begin(), response->getData()->begin(), response->getData()->end());
 
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Error from whip server: "
 				<< "asset svc ep: " << _assetServiceEndpoint << ", "
 				<< "error msg: " << error
@@ -460,7 +460,7 @@ namespace whip
 
 
 		} else {
-			AppLog::instance().out() 
+			AppLog::instance().out()
 				<< "[WHIP] Error while reading asset data from mesh server "
 				<< _assetServiceEndpoint
 				<< ": "

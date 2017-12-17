@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "AuthChallengeMsg.h"
 
 namespace whip
@@ -21,7 +21,7 @@ AuthChallengeMsg::~AuthChallengeMsg()
 
 void AuthChallengeMsg::generatePhrase()
 {
-	
+
 }
 
 const aperture::byte_array& AuthChallengeMsg::serialize() const
