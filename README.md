@@ -26,7 +26,6 @@ cmake -G "Visual Studio 15 2017 Win64" .. -DCMAKE_BUILD_TYPE=Debug
 ## Directions for Ubuntu 16.04 LTS
 
 ```bash
-cd aperture
 conan install . -s build_type=Debug -s arch=x86_64 --build=missing
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Debug
