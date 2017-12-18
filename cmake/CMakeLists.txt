@@ -2,12 +2,12 @@
 
 SET(cmake_SOURCE_FILES
 	CMakeLists.txt
-	
+
 	ucm.cmake
 	)
 SOURCE_GROUP("Shared Rules" FILES ${cmake_SOURCE_FILES})
 
-SET(master_SOURCE_FILES ../CmakeLists.txt )
+SET(master_SOURCE_FILES ../CMakeLists.txt )
 SOURCE_GROUP("Master Rules" FILES ${master_SOURCE_FILES})
 
 SET_SOURCE_FILES_PROPERTIES(${cmake_SOURCE_FILES} ${master_SOURCE_FILES}
